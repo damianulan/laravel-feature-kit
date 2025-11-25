@@ -9,12 +9,9 @@ namespace FeatureKit\Factories;
  */
 abstract class Feature
 {
-
-    abstract public function group(): string;
-
     abstract public function key(): string;
 
-    public function __construct()
+    private function __construct()
     {
         //
     }

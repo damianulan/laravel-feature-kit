@@ -2,47 +2,17 @@
 
 namespace {{ namespace }};
 
-use FormForge\Base\Form;
-use Illuminate\Http\Request;
-use FormForge\FormBuilder;
-use FormForge\Base\FormComponent;
+use FeatureKit\Factories\Feature;
 
-class {{ class }} extends Form
+class {{ class }} extends Feature
 {
-    /**
-     * Provide form components definition returning an instance of FormBuilder.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param mixed $model
-     * @return \FormForge\FormBuilder
-     */
-    public static function definition(Request $request, $model = null): FormBuilder
+    public function define(): bool
     {
-        $route = route('/');
-        $method = 'POST';
-
-        // edit form
-        if (!is_null($model)) {
-            $method = 'PUT';
-            $route = route('/', $model->id); // modify route when updating
-        }
-
-        return FormBuilder::boot($request, $method, $route, 'form_edit')
-            //->add()
-            ->addSubmit();
+        return true;
     }
 
-    /**
-     * Provide laravel validation rules.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param string|null $model_id - model uuid 
-     * @return array
-     */
-    public static function validation(Request $request, $model_id = null): array
+    public function key(): string
     {
-        return [
-            // include laravel validation rules
-        ];
+        return '';
     }
 }
