@@ -2,6 +2,8 @@
 
 namespace FeatureKit;
 
+use FeatureKit\Console\Commands\ClearCache;
+use FeatureKit\Console\Generators\FeatureMakeCommand;
 use FeatureKit\Repositories\BaseRepository;
 use FeatureKit\Repositories\JsonFeatureRepository;
 use FeatureKit\Repositories\DatabaseFeatureRepository;
@@ -61,10 +63,14 @@ class FeatureKitServiceProvider extends ServiceProvider
             __DIR__ . '/../config/featurekit.php' => config_path('featurekit.php'),
         ], 'featurekit');
 
-        $this->commands([]);
+        $this->commands([
+            FeatureMakeCommand::class,
+            ClearCache::class
+        ]);
 
         $this->registerBladeDirectives();
         MacroFactory::load();
+        app(Features::class);
     }
 
     public function registerBladeDirectives(): void

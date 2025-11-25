@@ -5,29 +5,28 @@ namespace FeatureKit\Support;
 use FeatureKit\Support\Composer;
 use Illuminate\Support\Str;
 use FeatureKit\Factories\Feature;
-use FeatureKit\Helpers\KitHelper;
 
 class DiscoverFeatures
 {
     public static function getFeatureClasses(): array
     {
-        $features = array_filter(Composer::getAutoloadedClasses(), function ($class){
+        $classes = array_filter(Composer::getAutoloadedClasses(), function ($class){
             if(Str::contains($class, 'Feature')){
                 $reflection = new \ReflectionClass($class);
-                return $reflection->isSubclassOf(Feature::class);
+                return $reflection->isInstantiable() && $reflection->isSubclassOf(Feature::class);
             }
             return false;
         });
 
-        return $features;
+        return array_values($classes);
     }
 
     public static function getFeatureInstances(): array
     {
-        $features = self::getFeatureClasses();
         $instances = [];
-        foreach ($features as $feature) {
-            $instances[] = new $feature();
+        foreach(self::getFeatureClasses() as $class){
+            $object = new $class();
+            $instances[$object->key] = $object;
         }
 
         return $instances;

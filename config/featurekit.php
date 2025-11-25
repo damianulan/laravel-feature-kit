@@ -10,7 +10,7 @@ return [
     |
     */
 
-    'connection' => 'database',
+    'connection' => env('FEATUREKIT_CONNECTION', 'json'),
 
     'drivers' => [
         'database' => [
