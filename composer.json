@@ -33,7 +33,10 @@
   "autoload": {
     "psr-4": {
       "FeatureKit\\": "src"
-    }
+    },
+    "files": [
+      "src/helper.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
@@ -52,7 +55,7 @@
         "FeatureKit\\FeatureKitServiceProvider"
       ],
       "aliases": {
-        "FormForge": "FeatureKit\\Facades\\FeatureKit"
+        "Features": "FeatureKit\\Features"
       }
     }
   }

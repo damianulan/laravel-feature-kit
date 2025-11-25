@@ -2,7 +2,11 @@
 
 namespace FeatureKit;
 
+use FeatureKit\Repositories\BaseRepository;
+use FeatureKit\Repositories\JsonFeatureRepository;
+use FeatureKit\Repositories\DatabaseFeatureRepository;
 use Illuminate\Support\Facades\Blade;
+use FeatureKit\Features;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -18,6 +22,15 @@ class FeatureKitServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/featurekit.php', 'featurekit');
+
+        $this->app->bind('FeatureRepository', function (): BaseRepository{
+            return match(config('featurekit.connection')){
+                'json' => new JsonFeatureRepository(),
+                default => new DatabaseFeatureRepository()
+            };
+        });
+
+        $this->app->singleton(Features::class);
     }
 
     /**
@@ -51,7 +64,13 @@ class FeatureKitServiceProvider extends ServiceProvider
         $this->commands([]);
 
         $this->registerBladeDirectives();
+        MacroFactory::load();
     }
 
-    public function registerBladeDirectives(): void {}
+    public function registerBladeDirectives(): void
+    {
+        Blade::directive('feature', function ($key): bool {
+            return feature($key);
+        });
+    }
 }
