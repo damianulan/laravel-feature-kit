@@ -55,7 +55,6 @@ abstract class BaseRepository
         }
 
 
-        dd($instances, $this->registered);
     }
 
     public function getFeatures(): array
