@@ -12,19 +12,19 @@ class KitHelper
         return app('FeatureRepository');
     }
 
-    public static function getCache(string $key): string
+    public static function getCache(string $key, $default = null)
     {
-        return Cache::get('featurekit.' . $key);
+        return Cache::get('featurekit.' . $key, $default);
     }
 
-    public static function setCache(string $key, string $value, ?int $ttl = null): void
+    public static function setCache(string $key, $value, ?int $ttl = null): void
     {
         if(!config('featurekit.cache.enabled')){
             return;
         }
         if(is_null($ttl)){
-            $ttl = (int) config('featurekit.cache.ttl');
+            $ttl = now()->addMinutes(config('featurekit.cache.ttl'));
         }
-        Cache::put('featurekit.' . $key, $value, config('featurekit.cache.ttl'));
+        Cache::put('featurekit.' . $key, $value, $ttl);
     }
 }

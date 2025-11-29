@@ -70,7 +70,6 @@ class FeatureKitServiceProvider extends ServiceProvider
 
         $this->registerBladeDirectives();
         MacroFactory::load();
-        app(Features::class);
     }
 
     public function registerBladeDirectives(): void

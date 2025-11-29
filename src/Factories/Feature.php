@@ -3,6 +3,7 @@
 namespace FeatureKit\Factories;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @author Damian Ułan <damian.ulan@protonmail.com>
@@ -12,6 +13,8 @@ use Illuminate\Contracts\Support\Arrayable;
 abstract class Feature implements Arrayable
 {
     protected $attributes = [];
+    protected $user = null;
+    private $registered = false;
 
     abstract public function define(): bool;
     abstract public function key(): string;
@@ -21,7 +24,7 @@ abstract class Feature implements Arrayable
         if(empty($this->key())){
             throw new \Exception('Feature key cannot be empty.');
         }
-        $this->initialize();
+        $this->initialize($attributes);
     }
 
     private function initialize(array $attributes = []): void
@@ -37,6 +40,7 @@ abstract class Feature implements Arrayable
 
         $this->attributes['key'] = $this->key();
         ksort($this->attributes);
+        $this->setUser();
     }
 
     public function __get(string $key)
@@ -73,14 +77,37 @@ abstract class Feature implements Arrayable
         $this->attributes[$key] = $value;
     }
 
+    public function setUser($user = null): void
+    {
+        if(is_null($user) && Auth::check()){
+            $user = Auth::user();
+        }
+        $this->user = $user;
+    }
+
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    public function register(): void
+    {
+        $this->registered = true;
+    }
+
     public function check(): bool
     {
-        return $this->define() && $this->isEnabled();
+        return $this->define() && $this->isEnabled() && $this->isRegistered();
     }
 
     public function isEnabled(): bool
     {
-        return $this->enabled;
+        return $this->enabled && $this->isRegistered();
+    }
+
+    public function isRegistered(): bool
+    {
+        return $this->registered;
     }
 
     public function toArray(): array

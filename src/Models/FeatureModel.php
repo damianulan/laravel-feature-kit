@@ -9,7 +9,6 @@ class FeatureModel extends Model
     protected $table;
 
     protected $fillable = [
-        'type',
         'key',
         'enabled',
     ];
