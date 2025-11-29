@@ -25,26 +25,30 @@ class Features extends Collection
         return app(Features::class);
     }
 
-    final public function find(string $key): Feature
+    final public function find(string $key, $user = null): ?Feature
     {
-        return parent::get($key);
+        $feature = $this->get($key);
+        if($feature && !is_null($user)){
+            $feature->setUser($user);
+        }
+        return $feature;
     }
 
     public function isEnabled(string $key, $user = null): bool
     {
         $feature = $this->get($key);
-        if(!is_null($user)){
+        if($feature && !is_null($user)){
             $feature->setUser($user);
         }
-        return $feature->isEnabled();
+        return $feature ? $feature->isEnabled() : false;
     }
 
     public function check(string $key, $user = null): bool
     {
         $feature = $this->get($key);
-        if(!is_null($user)){
+        if($feature && !is_null($user)){
             $feature->setUser($user);
         }
-        return $feature->check();
+        return $feature ? $feature->check() : false;
     }
 }

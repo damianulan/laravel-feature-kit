@@ -40,8 +40,8 @@ class JsonFeatureRepository extends BaseRepository
     public function create(Feature $feature): Feature
     {
         $feature->enabled = true;
-        $this->registered[$feature->key()] = $feature->toArray();
         $this->putFile($this->registered);
+        $this->registered[$feature->key()] = $feature->toArray();
         return $feature;
     }
 

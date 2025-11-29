@@ -74,8 +74,8 @@ class FeatureKitServiceProvider extends ServiceProvider
 
     public function registerBladeDirectives(): void
     {
-        Blade::directive('feature', function ($key): bool {
-            return feature($key);
+        Blade::directive('feature', function (string $key, $user = null): bool {
+            return app(Features::class)->check($key, $user);
         });
     }
 }

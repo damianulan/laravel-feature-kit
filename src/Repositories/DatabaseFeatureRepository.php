@@ -20,11 +20,16 @@ class DatabaseFeatureRepository extends BaseRepository
 
     public function create(Feature $feature): Feature
     {
+        $feature->enabled = true;
+        FeatureModel::updateOrCreate($feature->toArray());
+        $this->registered[$feature->key()] = $feature;
         return $feature;
     }
 
     public function delete(Feature $feature): Feature
     {
+        FeatureModel::where('key', $feature->key())->delete();
+        unset($this->registered[$feature->key()]);
         return $feature;
     }
 }

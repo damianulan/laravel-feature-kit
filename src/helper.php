@@ -9,3 +9,10 @@ if (! function_exists('feature')) {
         return app(Features::class)->check($key, $user);
     }
 }
+
+if (! function_exists('get_feature')) {
+    function get_feature(string $key, $user = null): ?Feature
+    {
+        return app(Features::class)->find($key, $user);
+    }
+}
