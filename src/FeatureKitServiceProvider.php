@@ -68,6 +68,12 @@ class FeatureKitServiceProvider extends ServiceProvider
             ClearCache::class
         ]);
 
+        $this->optimizes(
+            optimize: ClearCache::class,
+            clear: ClearCache::class,
+            key: 'featurekit-cache',
+        );
+
         $this->registerBladeDirectives();
         MacroFactory::load();
     }
