@@ -6,6 +6,12 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\Auth;
 
 /**
+ *
+ * @property-read string $key
+ * @property-read bool $enabled
+ * @property-read mixed $user
+ * @property-read bool $registered
+ *
  * @author Damian Ułan <damian.ulan@protonmail.com>
  * @copyright 2025 damianulan
  * @license MIT
@@ -41,6 +47,18 @@ abstract class Feature implements Arrayable
         $this->attributes['key'] = $this->key();
         ksort($this->attributes);
         $this->setUser();
+    }
+
+    public function __isset(string $key): bool
+    {
+        return isset($this->attributes[$key]);
+    }
+
+    public function __unset(string $key): void
+    {
+        if(isset($this->attributes[$key])){
+            unset($this->attributes[$key]);
+        }
     }
 
     public function __get(string $key)
