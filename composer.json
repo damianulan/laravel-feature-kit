@@ -1,7 +1,7 @@
 {
   "name": "damianulan/laravel-feature-kit",
   "type": "library",
-  "description": "Feature Kit for Laravel",
+  "description": "Feature Kit laravel package. Helps managing your features within application code. Determine whether a feature is enabled or disabled globally or to a specific user.",
   "keywords": [
     "laravel",
     "config",
