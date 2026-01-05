@@ -10,6 +10,7 @@ return [
     |
     */
 
+    // choose connection driver - for 'database' need to run a migration
     'connection' => env('FEATUREKIT_CONNECTION', 'database'),
 
     'drivers' => [
@@ -21,9 +22,17 @@ return [
         ],
     ],
 
+    // use cache to store registered and discovered features
     'cache' => [
         'enabled' => true,
         // in minutes
         'ttl' => 300,
+    ],
+
+
+    'features' => [
+        // here declare feature namespaces you want to register
+        // that may not be autoloaded.
+
     ],
 ];

@@ -40,19 +40,9 @@ class FeatureKitServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->loadTranslationsFrom(__DIR__ . '/../lang', 'featurekit');
-
-        $this->publishes([
-            __DIR__ . '/../lang' => $this->app->langPath('vendor/featurekit'),
-        ], 'featurekit-langs');
-
         $this->publishes([
             __DIR__ . '/../config/featurekit.php' => config_path('featurekit.php'),
         ], 'featurekit-config');
-
-        $this->publishes([
-            __DIR__ . '/../resources/views' => resource_path('views/vendor/featurekit'),
-        ], 'featurekit-views');
 
         $this->publishes([
             __DIR__ . '/../database/migrations/create_features_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_features_table.php'),

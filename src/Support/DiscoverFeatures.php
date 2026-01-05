@@ -9,17 +9,14 @@ use FeatureKit\Helpers\KitHelper;
 
 class DiscoverFeatures
 {
-    public static function getFeatureClasses(): array
+    /**
+     * Filter composer classes to those Discoverable as a Feature.
+     *
+     * @return array
+     */
+    public static function getFeatureAutoloadClasses(): array
     {
-        $classes = array_filter(Composer::getAutoloadedClasses(), function ($class){
-            if(Str::contains($class, 'Feature')){
-                $reflection = new \ReflectionClass($class);
-                return $reflection->isInstantiable() && $reflection->isSubclassOf(Feature::class);
-            }
-            return false;
-        });
-
-        return array_values($classes);
+        return array_values(array_filter(Composer::getAutoloadedClasses(), fn ($class) => Str::contains($class, '\\Feature')));
     }
 
     /**
@@ -32,13 +29,42 @@ class DiscoverFeatures
         $instances = KitHelper::getCache('autoload', []);
 
         if(empty($instances)){
-            foreach(self::getFeatureClasses() as $class){
-                $object = new $class();
-                $instances[$object->key] = $object;
+            foreach(array_merge(self::getFeatureAutoloadClasses(), config('featurekit.features', [])) as $class){
+                if(self::isValidFeatureClass($class)){
+                    $object = new $class();
+                    $instances[$object->key] = $object;
+                }
             }
+
             KitHelper::setCache('autoload', $instances);
         }
 
         return $instances;
+    }
+
+    private static function isValidFeatureClass(string $class): bool
+    {
+        // Ensure class exists (autoload allowed)
+        if (!class_exists($class)) {
+            return false;
+        }
+
+        try {
+            $reflection = new \ReflectionClass($class);
+        } catch (\ReflectionException $e) {
+            return false;
+        }
+
+        // Must be instantiable (not abstract, not interface, etc.)
+        if (!$reflection->isInstantiable()) {
+            return false;
+        }
+
+        // Must extend FeatureKit\Factories\Feature
+        if (!$reflection->isSubclassOf(Feature::class)) {
+            return false;
+        }
+
+        return true;
     }
 }
